@@ -35,8 +35,11 @@ function randomId() : string {
 
 function addItemTask(task : Task) : void {
   const item = document.createElement("li")
-  const label = document.createElement("label")
+  item.classList.add("list-group-item")
   const checkBox = document.createElement("input")
+  const label = document.createElement("label")
+  label.classList.add("form-check-label")
+  checkBox.classList.add("form-check-input")
   checkBox.type = "checkbox"
   checkBox.checked = task.isCompleted
   checkBox.addEventListener("change", () => {
