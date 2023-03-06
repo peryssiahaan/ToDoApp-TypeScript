@@ -1,11 +1,59 @@
-/**
- * This file is just a silly example to show everything working in the browser.
- * When you're ready to start on your site, clear the file. Happy hacking!
- **/
+const list = document.querySelector<HTMLUListElement>("#list")
+const form = document.querySelector<HTMLFormElement>("#new-task-form")
+const input = document.querySelector<HTMLInputElement>("#new-task-title")
 
-import confetti from 'canvas-confetti';
+type Task = {
+  id : string,
+  title : string,
+  isCompleted : boolean,
+  createdAt : Date
+}
 
-confetti.create(document.getElementById('canvas') as HTMLCanvasElement, {
-  resize: true,
-  useWorker: true,
-})({ particleCount: 200, spread: 200 });
+const tasks : Task[] = getTasks()
+tasks.forEach(addItemTask)
+
+
+form?.addEventListener("submit", (e) => {
+  e.preventDefault()
+  if(input?.value == "" || input?.value == null) return
+
+  const task : Task= {
+    id  : randomId(),
+    title : input.value,
+    isCompleted : false,
+    createdAt : new Date()
+  }
+  tasks.push(task)
+  saveTasks()
+  addItemTask(task)
+  input.value = ""
+})
+
+function randomId() : string {
+  return "" + Date.now() + Math.floor(Math.random() * 10)
+}
+
+function addItemTask(task : Task) : void {
+  const item = document.createElement("li")
+  const label = document.createElement("label")
+  const checkBox = document.createElement("input")
+  checkBox.type = "checkbox"
+  checkBox.checked = task.isCompleted
+  checkBox.addEventListener("change", () => {
+    task.isCompleted = checkBox.checked
+    saveTasks()
+  })
+  label.append(checkBox,task.title)
+  item.append(label)
+  list?.append(item)
+}
+
+function saveTasks(){
+  localStorage.setItem("TASKS",JSON.stringify(tasks))
+}
+
+function getTasks() : Task[]{
+  const preLoad = localStorage.getItem("TASKS")
+  if(preLoad == null) return []
+  return JSON.parse(preLoad)
+}

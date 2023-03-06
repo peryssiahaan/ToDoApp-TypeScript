@@ -4,15 +4,20 @@
     <meta charset="utf-8" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Web site created using create-snowpack-app" />
+    <meta
+      name="description"
+      content="Web site created using create-snowpack-app" />
     <link rel="stylesheet" type="text/css" href="/index.css" />
+    <script type="module" src="/dist/index.js" defer></script>
     <title>Snowpack App</title>
   </head>
   <body>
-    <img id="img" src="/logo.svg" />
-    <canvas id="canvas"></canvas>
+    <ul id="list"></ul>
+    <form id="new-task-form">
+      <input type="text" id="new-task-title" />
+      <button type="submit">Add Task</button>
+    </form>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <script type="module" src="/dist/index.js"></script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
