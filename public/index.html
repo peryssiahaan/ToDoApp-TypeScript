@@ -19,14 +19,18 @@
       crossorigin="anonymous"
       defer></script>
     <script type="module" src="/dist/index.js" defer></script>
-    <title>Snowpack App</title>
+    <title>Mini Todo App</title>
   </head>
   <body>
-    <div class="container w-25 mt-5">
+    <div class="container-sm mt-5">
       <form id="new-task-form">
         <div class="input-group">
-          <input type="text" id="new-task-title" class="form-control" />
-          <button type="submit" class="btn btn-primary">Add Task</button>
+          <input
+            type="text"
+            id="new-task-title"
+            class="form-control"
+            placeholder="Todo title" />
+          <button type="submit" class="btn btn-primary">Add Todo</button>
         </div>
       </form>
       <ul id="list" class="list-group mt-3"></ul>
