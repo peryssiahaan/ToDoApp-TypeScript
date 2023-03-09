@@ -1,6 +1,8 @@
 const list = document.querySelector<HTMLUListElement>("#list");
 const form = document.querySelector<HTMLFormElement>("#new-task-form");
 const input = document.querySelector<HTMLInputElement>("#new-task-title");
+const taskCounter =
+  document.querySelector<HTMLSpanElement>("[data-amount-task]");
 
 type Task = {
   id: string;
@@ -9,7 +11,7 @@ type Task = {
   createdAt: Date;
 };
 
-const tasks: Task[] = getTasks();
+let tasks: Task[] = getTasks();
 render();
 
 form?.addEventListener("submit", (e) => {
@@ -44,18 +46,25 @@ function getTasks(): Task[] {
 
 list?.addEventListener("click", (e) => {
   const clickedEl = e.target as HTMLElement;
-  if(clickedEl.tagName !== "INDEX") return
-  render()
+  if (clickedEl.tagName !== "INDEX") return;
+  render();
 });
 
-function clearList(element:HTMLElement) : void{
-  while(element.firstChild){
-    element.removeChild(element.firstChild)
+function clearList(element: HTMLElement): void {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+}
+
+function countTask():void{
+  if (taskCounter != null) {
+    taskCounter.innerHTML = "" + tasks.length;
   }
 }
 
 function render(): void {
-  if(list!= null) clearList(list)
+  if (list != null) clearList(list);
+  countTask()
   tasks.forEach((task) => {
     const item = document.createElement("li");
     item.classList.add(
@@ -63,28 +72,45 @@ function render(): void {
       "d-flex",
       "justify-content-between",
       "align-items-center"
-      );
-      const checkBox = document.createElement("input");
-      checkBox.id = task.id;
-      const label = document.createElement("label");
-      label.classList.add("form-check-label", "flex-fill");
-      label.htmlFor = task.id;
-      
-      const itemDate = document.createElement("small");
-      itemDate.classList.add("mx-5");
-      itemDate.innerText = new Date(task.createdAt).toLocaleDateString("id-ID", {
-        dateStyle: "medium",
-      });
-      checkBox.classList.add("form-check-input");
-      checkBox.type = "checkbox";
-      checkBox.checked = task.isCompleted;
-      checkBox.addEventListener("change", () => {
-        task.isCompleted = checkBox.checked;
-        item.style.backgroundColor = (task.isCompleted) ? "lime" : ""
-        saveTasks();
+    );
+    const checkBox = document.createElement("input");
+    checkBox.id = task.id;
+    const label = document.createElement("label");
+    label.classList.add("form-check-label", "flex-fill");
+    label.htmlFor = task.id;
+
+    const itemDate = document.createElement("small");
+    itemDate.classList.add("mx-5");
+    itemDate.innerText = new Date(task.createdAt).toLocaleDateString("id-ID", {
+      dateStyle: "medium",
+    });
+
+    const deleteIcon = document.createElement("span")
+    deleteIcon.classList.add("material-symbols-outlined","mx-2")
+    deleteIcon.innerText = "delete"
+    deleteIcon.style.cursor = "pointer"
+    deleteIcon.style.color = "red"
+    deleteIcon.addEventListener("click", () => {
+      item.remove()
+      tasks = tasks.filter(el => el.id !== task.id)
+      countTask()
+      saveTasks()
+    })
+
+    checkBox.classList.add("form-check-input");
+    checkBox.type = "checkbox";
+    checkBox.checked = task.isCompleted;
+    checkBox.addEventListener("change", () => {
+      task.isCompleted = checkBox.checked;
+      if (task.isCompleted) {
+        item.classList.add("list-group-item-success");
+      } else {
+        item.classList.remove("list-group-item-success");
+      }
+      saveTasks();
     });
     label.append(task.title);
-    item.append(label, itemDate, checkBox);
+    item.append(label, itemDate, checkBox,deleteIcon);
     list?.append(item);
   });
 }
